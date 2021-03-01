@@ -1,6 +1,4 @@
-package com.awin.coffeebreak.services.utils.formattingUtils;
-
-import java.util.stream.Collectors;
+package com.awin.coffeebreak.services.utils.formatting;
 
 public interface WebFormat {
 

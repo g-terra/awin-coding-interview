@@ -1,7 +1,7 @@
 package com.awin.coffeebreak.services.utils;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
-import com.awin.coffeebreak.services.utils.formattingUtils.FormattingTemplate;
+import com.awin.coffeebreak.services.utils.formatting.FormattingTemplate;
 
 import java.util.List;
 
