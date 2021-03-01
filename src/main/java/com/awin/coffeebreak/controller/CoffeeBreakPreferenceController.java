@@ -31,7 +31,7 @@ public class CoffeeBreakPreferenceController {
      * Publishes the list of preferences in the requested format
      */
     @GetMapping(path = "/today")
-    public ResponseEntity<?> today(@RequestParam("format") String format) {
+    public ResponseEntity<?> today(@RequestParam(name = "format" , required = false) String format) {
         if (format == null) {
             format = "html";
         }
