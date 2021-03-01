@@ -58,10 +58,10 @@ public class CoffeeBreakPreference {
         }
 
         this.type = type;
-        this.subType=subType;
+        this.subType = subType;
 
         this.requestedBy = requestedBy;
-        if (!details.isEmpty()) {
+        if (details != null && !details.isEmpty()) {
             setDetails(details);
         } else {
             setDetails(new HashMap<>());
