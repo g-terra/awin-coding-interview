@@ -1,19 +1,17 @@
 package com.awin.coffeebreak.entity;
 
-import java.sql.Date;
+import com.awin.coffeebreak.services.utils.formatting.WebFormat;
+
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "coffee_break_preference")
-public class CoffeeBreakPreference {
+public class CoffeeBreakPreference  implements WebFormat {
 
     public static List<String> TYPES = List.of("food", "drink");
     public static List<String> DRINK_TYPES = List.of("coffee", "tea");
