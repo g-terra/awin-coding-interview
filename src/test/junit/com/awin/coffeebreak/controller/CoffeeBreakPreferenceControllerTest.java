@@ -118,7 +118,7 @@ public class CoffeeBreakPreferenceControllerTest {
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today?format=xml");
-        String expectedJsonResponseBody = String.format(xmlFormat
+        String expectedXMLResponseBody = String.format(xmlFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails)
                 .replace(",\\", ", ");
 
@@ -126,7 +126,7 @@ public class CoffeeBreakPreferenceControllerTest {
                 .get(uri))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/xml" ))
-                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+                .andExpect(MockMvcResultMatchers.content().string(expectedXMLResponseBody));
 
     }
 
@@ -139,7 +139,7 @@ public class CoffeeBreakPreferenceControllerTest {
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today?format=xml");
-        String expectedJsonResponseBody = String.format(xmlFormat
+        String expectedXMLResponseBody = String.format(xmlFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), "{}")
                 .replace(",\\", ", ");
 
@@ -147,7 +147,7 @@ public class CoffeeBreakPreferenceControllerTest {
                 .get(uri))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/xml" ))
-                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+                .andExpect(MockMvcResultMatchers.content().string(expectedXMLResponseBody));
 
     }
 
@@ -159,14 +159,14 @@ public class CoffeeBreakPreferenceControllerTest {
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today?format=html");
-        String expectedJsonResponseBody = String.format(htmlFormat,
+        String expectedHTMLResponseBody = String.format(htmlFormat,
         expectedRequestedBy.getName() , expectedSubType, "test1 : test1");
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
-                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+                .andExpect(MockMvcResultMatchers.content().string(expectedHTMLResponseBody));
 
     }
 
@@ -178,14 +178,14 @@ public class CoffeeBreakPreferenceControllerTest {
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today");
-        String expectedJsonResponseBody = String.format(htmlFormat,
+        String expectedHTMLResponseBody = String.format(htmlFormat,
                 expectedRequestedBy.getName() , expectedSubType, "test1 : test1");
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
-                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+                .andExpect(MockMvcResultMatchers.content().string(expectedHTMLResponseBody));
 
     }
 
@@ -198,14 +198,14 @@ public class CoffeeBreakPreferenceControllerTest {
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today?format=html");
-        String expectedJsonResponseBody = String.format(htmlFormat,
+        String expectedHTMLResponseBody = String.format(htmlFormat,
                 expectedRequestedBy.getName() , expectedSubType, "");
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
-                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+                .andExpect(MockMvcResultMatchers.content().string(expectedHTMLResponseBody));
 
     }
 
