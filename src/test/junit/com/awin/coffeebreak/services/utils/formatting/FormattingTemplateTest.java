@@ -1,4 +1,4 @@
-package com.awin.coffeebreak.services.utils.formattingUtils;
+package com.awin.coffeebreak.services.utils.formatting;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;

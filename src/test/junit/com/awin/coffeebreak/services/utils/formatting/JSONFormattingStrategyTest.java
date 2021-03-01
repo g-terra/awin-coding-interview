@@ -1,4 +1,4 @@
-package com.awin.coffeebreak.services.utils.formattingUtils;
+package com.awin.coffeebreak.services.utils.formatting;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
@@ -8,18 +8,18 @@ import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class XMLFormattingStrategyTest {
+public class JSONFormattingStrategyTest {
 
-    private XMLFormattingStrategy xmlFormattingStrategy;
+    private JSONFormattingStrategy jsonFormattingStrategy;
 
     @Before
     public void setUp() {
-        this.xmlFormattingStrategy = new XMLFormattingStrategy();
+        this.jsonFormattingStrategy = new JSONFormattingStrategy();
     }
 
     @Test
     public void formatName() {
-        assertEquals("text/xml", this.xmlFormattingStrategy.formatName());
+        assertEquals("Application/json", this.jsonFormattingStrategy.formatName());
     }
 
     @Test
@@ -29,21 +29,24 @@ public class XMLFormattingStrategyTest {
         expectedRequestedBy.setName("test");
         CoffeeBreakPreference preference = new CoffeeBreakPreference("drink", "coffee", expectedRequestedBy, null);
 
-        String expected = "<preference type=\"drink\" subtype=\"coffee\">" +
-                "<requestedBy>" + expectedRequestedBy + "</requestedBy>" +
-                "<details>{}</details>" +
-                "</preference>";
+        String expected = "{\"id\":null," +
+                " \"type\":\"drink\"," +
+                " \"subType\":\"coffee\"," +
+                " \"requestedBy\":\""+expectedRequestedBy+"\"," +
+                " \"requestedDate\":\"null\"," +
+                " \"details\":\"{}\"" +
+                "}";
 
-        assertEquals(expected, xmlFormattingStrategy.formatItem(preference));
+        assertEquals(expected, jsonFormattingStrategy.formatItem(preference));
     }
 
     @Test
     public void formatItem_passNullObject_returnsEmptyTemplate() {
-        assertThrows(NullPointerException.class, () -> xmlFormattingStrategy.formatItem(null));
+        assertThrows(NullPointerException.class, () -> jsonFormattingStrategy.formatItem(null));
     }
 
     @Test
     public void formatWrapper() {
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Preferences>%s</Preferences>", this.xmlFormattingStrategy.formatWrapper());
+        assertEquals("{\"preferences\":[%s]}", this.jsonFormattingStrategy.formatWrapper());
     }
 }

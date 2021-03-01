@@ -3,7 +3,6 @@ package com.awin.coffeebreak.services
 import com.awin.coffeebreak.entity.CoffeeBreakPreference
 import com.awin.coffeebreak.entity.StaffMember
 import com.awin.coffeebreak.services.utils.notifications.EmailNotification
-import com.awin.coffeebreak.services.utils.notifications.FailedToNotifyException
 import spock.lang.Specification
 
 import static org.assertj.core.api.Assertions.assertThat
