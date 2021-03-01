@@ -1,20 +1,12 @@
 package com.awin.coffeebreak.controller;
 
-import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
-import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository;
 import com.awin.coffeebreak.repository.StaffMemberRepository;
 import com.awin.coffeebreak.services.CoffeeBreakPreferenceService;
-import com.awin.coffeebreak.services.utils.CurrentDayCoffeeBreakPreferenceResponse;
 import com.awin.coffeebreak.services.NotificationService;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.awin.coffeebreak.services.utils.CurrentDayCoffeeBreakPreferenceResponse;
 import com.awin.coffeebreak.services.utils.notifications.EmailNotification;
-import com.awin.coffeebreak.services.utils.notifications.NotificationStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +14,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 public class CoffeeBreakPreferenceController {
 
-    public CoffeeBreakPreferenceRepository coffeeBreakPreferenceRepository;
-    public StaffMemberRepository staffMemberRepository;
-    public CoffeeBreakPreferenceService coffeeBreakPreferenceService;
+    private final StaffMemberRepository staffMemberRepository;
+    private final CoffeeBreakPreferenceService coffeeBreakPreferenceService;
+    private final NotificationService notificationService;
 
-    public CoffeeBreakPreferenceController(CoffeeBreakPreferenceRepository coffeeBreakPreferenceRepository, CoffeeBreakPreferenceService coffeeBreakPreferenceService
-    ) {
-        this.coffeeBreakPreferenceRepository = coffeeBreakPreferenceRepository;
+    @Autowired
+    public CoffeeBreakPreferenceController(
+            StaffMemberRepository staffMemberRepository, CoffeeBreakPreferenceService coffeeBreakPreferenceService,
+            NotificationService notificationService) {
+        this.staffMemberRepository = staffMemberRepository;
+
         this.coffeeBreakPreferenceService = coffeeBreakPreferenceService;
+        this.notificationService = notificationService;
+        notificationService.addNotificationStrategy(new EmailNotification());
+
     }
 
     @GetMapping(path = "/today", produces = {"application/json"})
@@ -65,13 +65,10 @@ public class CoffeeBreakPreferenceController {
 
         if (staffMember.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        EmailNotification emailNotification = new EmailNotification();
+        boolean sentAllNotifications = this.notificationService.notifyStaffMember(
+                staffMember.get(),
+                coffeeBreakPreferenceService.getPreferenceOf(staffMember.get()));
 
-        List<NotificationStrategy> notificationStrategies = Arrays.asList(emailNotification);
-
-        NotificationService notifier = new NotificationService(notificationStrategies);
-
-        boolean sentAllNotifications = notifier.notifyStaffMember(staffMember.get(), coffeeBreakPreferenceService.getTodayPreferences());
         if (sentAllNotifications) return ResponseEntity.ok("All notifications were sent!");
         return ResponseEntity.badRequest().body("Failed to send notification!");
     }
