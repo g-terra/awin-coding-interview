@@ -6,12 +6,16 @@ import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository;
 import com.awin.coffeebreak.repository.StaffMemberRepository;
 import com.awin.coffeebreak.services.CoffeeBreakPreferenceService;
 import com.awin.coffeebreak.services.utils.CurrentDayCoffeeBreakPreferenceResponse;
-import com.awin.coffeebreak.services.SlackNotifier;
+import com.awin.coffeebreak.services.NotificationService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.awin.coffeebreak.services.utils.notifications.EmailNotification;
+import com.awin.coffeebreak.services.utils.notifications.NotificationStrategy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +35,7 @@ public class CoffeeBreakPreferenceController {
         this.coffeeBreakPreferenceService = coffeeBreakPreferenceService;
     }
 
-    @GetMapping(path = "/today" , produces={"application/json"})
+    @GetMapping(path = "/today", produces = {"application/json"})
     public ResponseEntity<?> todayJson() {
         CurrentDayCoffeeBreakPreferenceResponse todayCoffeeBreakAsJSON = coffeeBreakPreferenceService.getTodayCoffeeBreakAsJSON();
         return ResponseEntity.ok()
@@ -39,7 +43,7 @@ public class CoffeeBreakPreferenceController {
                 .body(todayCoffeeBreakAsJSON.getContent());
     }
 
-    @GetMapping(path = "/today" , produces={"text/xml"})
+    @GetMapping(path = "/today", produces = {"text/xml"})
     public ResponseEntity<?> todayXml() {
         CurrentDayCoffeeBreakPreferenceResponse todayCoffeeBreakAsXML = coffeeBreakPreferenceService.getTodayCoffeeBreakAsXML();
         return ResponseEntity.ok()
@@ -47,7 +51,7 @@ public class CoffeeBreakPreferenceController {
                 .body(todayCoffeeBreakAsXML.getContent());
     }
 
-    @GetMapping(path = "/today" , produces={"text/html"})
+    @GetMapping(path = "/today", produces = {"text/html"})
     public ResponseEntity<?> todayHtml() {
         CurrentDayCoffeeBreakPreferenceResponse todayCoffeeBreakAsHTML = coffeeBreakPreferenceService.getTodayCoffeeBreakAsHTML();
         return ResponseEntity.ok()
@@ -55,17 +59,21 @@ public class CoffeeBreakPreferenceController {
                 .body(todayCoffeeBreakAsHTML.getContent());
     }
 
-
     @GetMapping("/notifyStaffMember")
     public ResponseEntity<Object> notifyStaffMember(@RequestParam("staffMemberId") int id) {
         Optional<StaffMember> staffMember = this.staffMemberRepository.findById(id);
 
-        List<CoffeeBreakPreference> preferences = new ArrayList<>();
+        if (staffMember.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        SlackNotifier notifier = new SlackNotifier();
-        boolean ok = notifier.notifyStaffMember(staffMember.get(), preferences);
+        EmailNotification emailNotification = new EmailNotification();
 
-        return ResponseEntity.ok(ok ? "OK" : "NOT OK");
+        List<NotificationStrategy> notificationStrategies = Arrays.asList(emailNotification);
+
+        NotificationService notifier = new NotificationService(notificationStrategies);
+
+        boolean sentAllNotifications = notifier.notifyStaffMember(staffMember.get(), coffeeBreakPreferenceService.getTodayPreferences());
+        if (sentAllNotifications) return ResponseEntity.ok("All notifications were sent!");
+        return ResponseEntity.badRequest().body("Failed to send notification!");
     }
 
 }
