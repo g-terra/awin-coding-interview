@@ -6,6 +6,7 @@ import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository;
 import com.awin.coffeebreak.services.SlackNotifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -47,33 +48,42 @@ public class CoffeeBreakPreferenceControllerTest {
     @InjectMocks
     public CoffeeBreakPreferenceController coffeeBreakPreferenceController;
 
+    private CoffeeBreakPreference preference;
+    private StaffMember expectedRequestedBy;
+    private String expectedType;
+    private String expectedSubType;
+    private HashMap<String, String> expectedDetails;
+    private String jsonPreferencesFormat = "{\"preferences\":[{\"id\":null," +
+            " \"type\":\"%s\"," +
+            " \"subType\":\"%s\"," +
+            " \"requestedBy\":\"%s\"," +
+            " \"requestedDate\":\"null\"," +
+            " \"details\":\"%s\"" +
+            "}]}";
+
+    @Before
+    public void setUp() {
+        expectedRequestedBy = new StaffMember();
+        expectedRequestedBy.setSlackIdentifier("ABC123");
+        expectedType = "drink";
+        expectedSubType = "coffee";
+        expectedDetails = new HashMap<>();
+        expectedDetails.put("test1", "test1");
+        expectedDetails.put("test2", "test2");
+        expectedDetails.put("test3", "test3");
+        this.preference = new CoffeeBreakPreference(expectedType, expectedSubType, expectedRequestedBy, expectedDetails);
+    }
+
     @Test
     public void getRequestToTodaysPreferencesEndpoint_requestJSON_returnsJsonWithCorrectData() throws Exception {
 
-
-        StaffMember expectedRequestedBy = new StaffMember();
-        expectedRequestedBy.setSlackIdentifier("ABC123");
-        String expectedType = "drink";
-        String expectedSubType = "coffee";
-        HashMap<String, String> expectedDetails = new HashMap<>();
-
-        CoffeeBreakPreference preference1 = new CoffeeBreakPreference(expectedType, expectedSubType, expectedRequestedBy, expectedDetails);
-
-        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preference1);
+        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preference);
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
         URI uri = new URI("/today?format=json");
-
-        String expectedJsonResponseBody = String.format(
-                "{\"preferences\":[{\"id\":null," +
-                        " \"type\":\"%s\"," +
-                        " \"subType\":\"%s\"," +
-                        " \"requestedBy\":\"%s\"," +
-                        " \"requestedDate\":\"null\"," +
-                        " \"details\":\"%s\"" +
-                        "}]}"
-                , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails.size() == 0 ? "{}" : expectedDetails)
+        String expectedJsonResponseBody = String.format(jsonPreferencesFormat
+                , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails)
                 .replace(",\\", ", ");
 
         mockMvc.perform(MockMvcRequestBuilders
