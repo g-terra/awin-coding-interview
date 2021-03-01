@@ -58,6 +58,7 @@ public class CoffeeBreakPreference {
         }
 
         this.type = type;
+        this.subType=subType;
 
         this.requestedBy = requestedBy;
         if (!details.isEmpty()) {
