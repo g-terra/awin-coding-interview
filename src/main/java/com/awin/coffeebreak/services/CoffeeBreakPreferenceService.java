@@ -1,13 +1,14 @@
 package com.awin.coffeebreak.services;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
+import com.awin.coffeebreak.entity.StaffMember;
 import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository;
 import com.awin.coffeebreak.services.utils.CurrentDayCoffeeBreakPreferenceResponse;
-import com.awin.coffeebreak.services.utils.formattingUtils.FormattingTemplate;
-import com.awin.coffeebreak.services.utils.formattingUtils.HTMLFormattingStrategy;
+import com.awin.coffeebreak.services.utils.formatting.FormattingTemplate;
+import com.awin.coffeebreak.services.utils.formatting.HTMLFormattingStrategy;
 
-import com.awin.coffeebreak.services.utils.formattingUtils.JSONFormattingStrategy;
-import com.awin.coffeebreak.services.utils.formattingUtils.XMLFormattingStrategy;
+import com.awin.coffeebreak.services.utils.formatting.JSONFormattingStrategy;
+import com.awin.coffeebreak.services.utils.formatting.XMLFormattingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,12 @@ public class CoffeeBreakPreferenceService {
         this.coffeeBreakPreferenceRepository = coffeeBreakPreferenceRepository;
     }
 
-    private List<CoffeeBreakPreference> getTodayPreferences() {
+    public List<CoffeeBreakPreference> getTodayPreferences() {
         return coffeeBreakPreferenceRepository.getPreferencesForToday();
+    }
+
+    public CoffeeBreakPreference getPreferenceOf(StaffMember staffMember) {
+        return coffeeBreakPreferenceRepository.getTodayPreferenceById(staffMember.getId());
     }
 
     public CurrentDayCoffeeBreakPreferenceResponse getTodayCoffeeBreakAsXML() {
