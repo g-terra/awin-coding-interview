@@ -45,9 +45,6 @@ public class CoffeeBreakPreferenceControllerTest {
     @MockBean
     public CoffeeBreakPreferenceRepository coffeeBreakPreferenceRepository;
 
-    @InjectMocks
-    public CoffeeBreakPreferenceController coffeeBreakPreferenceController;
-
     private CoffeeBreakPreference preference;
     private StaffMember expectedRequestedBy;
     private String expectedType;
@@ -91,6 +88,25 @@ public class CoffeeBreakPreferenceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
+    }
+
+    @Test
+    public void getRequestToTodaysPreferencesEndpoint_requestJSONWithNullDetails_returnsJsonWithCorrectData() throws Exception {
+
+        CoffeeBreakPreference preferenceWithNullDetails = new CoffeeBreakPreference(expectedType, expectedSubType, expectedRequestedBy, null);
+        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preferenceWithNullDetails);
+
+        Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
+
+        URI uri = new URI("/today?format=json");
+        String expectedJsonResponseBody = String.format(jsonPreferencesFormat
+                , expectedType, expectedSubType, expectedRequestedBy.toString(), "{}")
+                .replace(",\\", ", ");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
 
