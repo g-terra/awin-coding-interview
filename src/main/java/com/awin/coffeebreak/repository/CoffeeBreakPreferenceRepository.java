@@ -1,9 +1,12 @@
 package com.awin.coffeebreak.repository;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import com.awin.coffeebreak.entity.StaffMember;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,17 +15,22 @@ public interface CoffeeBreakPreferenceRepository extends CrudRepository<CoffeeBr
 
     default List<CoffeeBreakPreference> getPreferencesForToday() {
         return getPreferencesForToday(
-              Instant.now().truncatedTo(ChronoUnit.DAYS),
-              Instant.now().truncatedTo(ChronoUnit.DAYS).plus(1, ChronoUnit.DAYS)
+                Instant.now().truncatedTo(ChronoUnit.DAYS),
+                Instant.now().truncatedTo(ChronoUnit.DAYS).plus(1, ChronoUnit.DAYS)
         );
     }
 
     @Query("select p from CoffeeBreakPreference p " +
-          "where p.requestedDate > :start " +
-          "and p.requestedDate < :end")
+            "where p.requestedDate > :start " +
+            "and p.requestedDate < :end")
     List<CoffeeBreakPreference> getPreferencesForToday(
-          @Param("start") Instant start,
-          @Param("end") Instant end
+            @Param("start") Instant start,
+            @Param("end") Instant end
     );
+
+    @Query("select p from CoffeeBreakPreference p " +
+            "where p.requestedDate > :start " +
+            "and p.requestedDate < :end and p.requestedBy.id = :staffMemberId")
+    CoffeeBreakPreference getTodayPreferenceById(@Param("staffMemberId") Integer staffMemberId);
 
 }
