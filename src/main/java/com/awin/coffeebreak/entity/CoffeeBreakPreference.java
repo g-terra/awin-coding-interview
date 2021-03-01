@@ -9,11 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "coffee_break_preference")
@@ -38,6 +34,10 @@ public class CoffeeBreakPreference {
     @Column
     Instant requestedDate;
 
+    @ElementCollection
+    @CollectionTable(name = "coffebreak_preferences_detail",
+            joinColumns = {@JoinColumn(name = "coffebreak_preference_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "detail")
     @Column
     Map<String, String> details;
 
