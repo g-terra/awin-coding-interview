@@ -47,7 +47,7 @@ public class CoffeeBreakPreference {
         if (!TYPES.contains(type)) {
             throw new IllegalArgumentException();
         }
-        if (type == "food") {
+        if (type.equals("food")) {
             if (!FOOD_TYPES.contains(subType)) {
                 throw new IllegalArgumentException();
             }
