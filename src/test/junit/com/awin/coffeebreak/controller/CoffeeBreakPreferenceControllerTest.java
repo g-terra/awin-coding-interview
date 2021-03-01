@@ -83,6 +83,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"application/json" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -104,6 +105,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"application/json" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -123,6 +125,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/xml" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -143,6 +146,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/xml" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -161,6 +165,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -179,6 +184,7 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
@@ -198,10 +204,10 @@ public class CoffeeBreakPreferenceControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type" ,"text/html" ))
                 .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
 
     }
-
 
     @Test
     public void notifyStaffMember() {
