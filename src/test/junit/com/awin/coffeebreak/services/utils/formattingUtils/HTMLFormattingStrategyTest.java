@@ -31,7 +31,6 @@ public class HTMLFormattingStrategyTest {
 
         String expected = "<li>test would like a coffee. ()</li>";
 
-        HTMLFormattingStrategy htmlFormattingStrategy = new HTMLFormattingStrategy();
         assertEquals(expected, htmlFormattingStrategy.formatItem(preference));
     }
 
