@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -66,6 +67,8 @@ public class CoffeeBreakPreferenceControllerTest {
             "</preference>" +
             "</Preferences>";
 
+    private String htmlFormat = "<ul><li>%s would like a %s. (%s)</li></ul>";
+
     @Before
     public void setUp() {
         expectedRequestedBy = new StaffMember();
@@ -74,8 +77,6 @@ public class CoffeeBreakPreferenceControllerTest {
         expectedSubType = "coffee";
         expectedDetails = new HashMap<>();
         expectedDetails.put("test1", "test1");
-        expectedDetails.put("test2", "test2");
-        expectedDetails.put("test3", "test3");
         this.preference = new CoffeeBreakPreference(expectedType, expectedSubType, expectedRequestedBy, expectedDetails);
     }
 
@@ -158,7 +159,60 @@ public class CoffeeBreakPreferenceControllerTest {
 
     }
 
+    @Test
+    public void getRequestToTodaysPreferencesEndpoint_requestHTML_returnsHTMLWithCorrectData() throws Exception {
 
+        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preference);
+
+        Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
+
+        URI uri = new URI("/today?format=html");
+        String expectedJsonResponseBody = String.format(htmlFormat,
+        expectedRequestedBy.getName() , expectedSubType, "test1 : test1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+
+    }
+
+    @Test
+    public void getRequestToTodaysPreferencesEndpoint_requestWithoutSpecifyingTheFormat_returnsHTMLWithCorrectData() throws Exception {
+
+        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preference);
+
+        Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
+
+        URI uri = new URI("/today");
+        String expectedJsonResponseBody = String.format(htmlFormat,
+                expectedRequestedBy.getName() , expectedSubType, "test1 : test1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+
+    }
+
+    @Test
+    public void getRequestToTodaysPreferencesEndpoint_requestWithoutWithNullDetails_returnsHTMLWithCorrectData() throws Exception {
+
+        CoffeeBreakPreference preferenceWithNullDetails = new CoffeeBreakPreference(expectedType, expectedSubType, expectedRequestedBy, null);
+        List<CoffeeBreakPreference> todayPreferences = Collections.singletonList(preferenceWithNullDetails);
+
+        Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
+
+        URI uri = new URI("/today?format=html");
+        String expectedJsonResponseBody = String.format(htmlFormat,
+                expectedRequestedBy.getName() , expectedSubType, "");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(expectedJsonResponseBody));
+
+    }
 
 
     @Test
