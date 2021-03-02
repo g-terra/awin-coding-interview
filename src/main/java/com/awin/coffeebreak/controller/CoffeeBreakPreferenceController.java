@@ -1,5 +1,6 @@
 package com.awin.coffeebreak.controller;
 
+import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
 import com.awin.coffeebreak.repository.StaffMemberRepository;
 import com.awin.coffeebreak.services.CoffeeBreakPreferenceService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,6 +37,39 @@ public class CoffeeBreakPreferenceController {
 
     }
 
+
+    @GetMapping(path = "/today")
+    public ResponseEntity<?> today(@RequestParam(name = "format" , required = false) String format) {
+        if (format == null) format = "html";
+
+        String responseContent;
+        String contentType;
+
+        switch (format) {
+            case "json":
+                CurrentDayCoffeeBreakPreferenceResponse responseJSON = coffeeBreakPreferenceService.getTodayCoffeeBreakAsJSON();
+                responseContent = responseJSON.getContent();
+                contentType = responseJSON.getContentType();
+                break;
+
+            case "xml":
+                CurrentDayCoffeeBreakPreferenceResponse responseXML = coffeeBreakPreferenceService.getTodayCoffeeBreakAsXML();
+                responseContent = responseXML.getContent();
+                contentType = responseXML.getContentType();
+                break;
+
+            default:
+                CurrentDayCoffeeBreakPreferenceResponse responseHtml = coffeeBreakPreferenceService.getTodayCoffeeBreakAsHTML();
+                responseContent = responseHtml.getContent();
+                contentType = responseHtml.getContentType();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(contentType))
+                .body(responseContent);
+    }
+
+
     @GetMapping(path = "/today", produces = {"application/json"})
     public ResponseEntity<?> todayJson() {
         CurrentDayCoffeeBreakPreferenceResponse todayCoffeeBreakAsJSON = coffeeBreakPreferenceService.getTodayCoffeeBreakAsJSON();
@@ -42,6 +77,8 @@ public class CoffeeBreakPreferenceController {
                 .contentType(MediaType.valueOf(todayCoffeeBreakAsJSON.getContentType()))
                 .body(todayCoffeeBreakAsJSON.getContent());
     }
+
+
 
     @GetMapping(path = "/today", produces = {"text/xml"})
     public ResponseEntity<?> todayXml() {
