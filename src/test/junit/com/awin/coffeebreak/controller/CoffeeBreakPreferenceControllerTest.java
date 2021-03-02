@@ -76,7 +76,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=json");
+        URI uri = new URI("/today");
         String expectedJsonResponseBody = String.format(jsonPreferencesFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails)
                 .replace(",\\", ", ");
@@ -97,7 +97,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=json");
+        URI uri = new URI("/today");
         String expectedJsonResponseBody = String.format(jsonPreferencesFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails)
                 .replace(",\\", ", ");
@@ -118,7 +118,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=json");
+        URI uri = new URI("/today");
         String expectedJsonResponseBody = String.format(jsonPreferencesFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), "{}")
                 .replace(",\\", ", ");
@@ -138,7 +138,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=xml");
+        URI uri = new URI("/today");
         String expectedXMLResponseBody = String.format(xmlFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), expectedDetails)
                 .replace(",\\", ", ");
@@ -159,7 +159,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=xml");
+        URI uri = new URI("/today");
         String expectedXMLResponseBody = String.format(xmlFormat
                 , expectedType, expectedSubType, expectedRequestedBy.toString(), "{}")
                 .replace(",\\", ", ");
@@ -179,7 +179,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=html");
+        URI uri = new URI("/today");
         String expectedHTMLResponseBody = String.format(htmlFormat,
                 expectedRequestedBy.getName(), expectedSubType, "test1 : test1");
 
@@ -219,7 +219,7 @@ public class CoffeeBreakPreferenceControllerTest {
 
         Mockito.when(coffeeBreakPreferenceRepository.getPreferencesForToday()).thenReturn(todayPreferences);
 
-        URI uri = new URI("/today?format=html");
+        URI uri = new URI("/today");
         String expectedHTMLResponseBody = String.format(htmlFormat,
                 expectedRequestedBy.getName(), expectedSubType, "");
 
